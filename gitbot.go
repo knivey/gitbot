@@ -129,15 +129,13 @@ func (pl Payload) PusherName() string {
 
 func alertChan(pl Payload) {
 	name := pl.Name()
-	num := pl.NumCommits()
-	who := pl.PusherName()
 	branch := pl.Branch()
 	comp, err := gitio.Shorten(pl.Compare)
 	if err != nil {
 		comp = pl.Compare
 	}
 
-	msg := fmt.Sprintf(MSG1, name, who, num, branch, comp)
+	msg := fmt.Sprintf(MSG1, name, pl.PusherName(), pl.NumCommits(), branch, comp)
 	Endpoint.Privmsg(Channel, msg)
 
 	var c *Commit
