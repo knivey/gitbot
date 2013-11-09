@@ -139,7 +139,7 @@ func alertChan(pl Payload) {
 	Endpoint.Privmsg(Channel, msg)
 
 	var c *Commit
-	for i := 0; i < num; i++ {
+	for i := 0; i < pl.NumCommits(); i++ {
 		c = pl.Commits[i]
 		msg = fmt.Sprintf(MSG2, name, branch, c.ShortId(), c.User(), c.Msg())
 		Endpoint.Privmsg(Channel, msg)
