@@ -17,8 +17,9 @@ var (
 )
 
 const (
-	MSG1 = "[%s] %s pushed %v commits to %s %s"
-	MSG2 = "[%s/%s] %s: %s: %s"
+	PAYLOAD_FORMAT = "[%s] %s pushed %v commits to %s %s"
+	COMMIT_FORMAT  = "%s: %s: %s"
+	MSG            = "[%s/%s] %s"
 )
 
 func (c Commit) User() string {
@@ -43,6 +44,10 @@ func (c Commit) Msg() string {
 		return "No message"
 	}
 	return c.Message
+}
+
+func (c Commit) String() string {
+	return fmt.Sprintf(COMMIT_FORMAT, c.ShortId(), c.User(), c.Msg())
 }
 
 func (pl Payload) Branch() string {
@@ -71,21 +76,27 @@ func (pl Payload) PusherName() string {
 	return pl.Pusher.Name
 }
 
-func alertChan(pl Payload) {
-	name := pl.Name()
-	branch := pl.Branch()
+func (pl Payload) String() (out string) {
 	comp, err := gitio.Shorten(pl.Compare)
 	if err != nil {
 		comp = pl.Compare
 	}
+	out = fmt.Sprintf(PAYLOAD_FORMAT, pl.Name(), pl.PusherName(),
+		pl.NumCommits(), pl.Branch, comp)
+	return
+}
 
-	msg := fmt.Sprintf(MSG1, name, pl.PusherName(), pl.NumCommits(), branch, comp)
-	Endpoint.Privmsg(Channel, msg)
-
+func alertChan(pl Payload) {
+	var msg string
 	var c *Commit
+	name := pl.Name()
+	branch := pl.Branch()
+
+	Endpoint.Privmsg(Channel, pl)
+
 	for i := 0; i < pl.NumCommits(); i++ {
 		c = pl.Commits[i]
-		msg = fmt.Sprintf(MSG2, name, branch, c.ShortId(), c.User(), c.Msg())
+		msg = fmt.Sprintf(MSG, name, branch, c)
 		Endpoint.Privmsg(Channel, msg)
 	}
 }
