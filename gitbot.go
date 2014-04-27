@@ -5,33 +5,34 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/aarondl/gitio"
+	"github.com/aarondl/cinotify"
 	"github.com/aarondl/ultimateq/data"
-	"log"
+	"github.com/gorilla/mux"
 	"net/http"
 	"strings"
 )
 
-var (
-	Endpoint *data.DataEndpoint
-	Channel  string
-)
-
 const (
+	Name           = "gitbot"
 	PAYLOAD_FORMAT = "[%s] %s pushed %v commits to %s %s"
 	COMMIT_FORMAT  = "%s: %s: %s"
 	MSG            = "[%s/%s] %s"
+	// I have made this bold here to distinguish from actual
+	// data that contains Unknown
+	UNKNOWN        = "\x02Unknown\x02"
+	NOMSG          = "No message"
 )
 
 func (c Commit) User() string {
 	if c.Committer == nil || c.Committer.Username == "" {
-		return "\x02Unknown\x02"
+		return UNKNOWN
 	}
 	return c.Committer.Username
 }
 
 func (c Commit) ShortId() string {
 	if c.Id == "" {
-		return "\x02Unknown\x02"
+		return UNKNOWN
 	}
 	if len(c.Id) < 7 {
 		return c.Id
@@ -41,9 +42,14 @@ func (c Commit) ShortId() string {
 
 func (c Commit) Msg() string {
 	if c.Message == "" {
-		return "No message"
+		return NOMSG
 	}
-	return c.Message
+	n := strings.IndexOf(c.Message, "\n")
+	if n > 0 {
+		return c.Message[:n-1]
+	} else {
+		return c.Message
+	}
 }
 
 func (c Commit) String() string {
@@ -57,7 +63,7 @@ func (pl Payload) Branch() string {
 
 func (pl Payload) Name() string {
 	if pl.Repository == nil || pl.Repository.Name == "" {
-		return "\x02Unknown\x02"
+		return UNKNOWN
 	}
 	return pl.Repository.Name
 }
@@ -71,7 +77,7 @@ func (pl Payload) NumCommits() int {
 
 func (pl Payload) PusherName() string {
 	if pl.Pusher == nil || pl.Pusher.Name == "" {
-		return "\x02Unknown\x02"
+		return UNKNOWN
 	}
 	return pl.Pusher.Name
 }
@@ -82,41 +88,59 @@ func (pl Payload) String() (out string) {
 		comp = pl.Compare
 	}
 	out = fmt.Sprintf(PAYLOAD_FORMAT, pl.Name(), pl.PusherName(),
-		pl.NumCommits(), pl.Branch, comp)
+		pl.NumCommits(), pl.Branch(), comp)
 	return
 }
 
-func alertChan(pl Payload) {
+func AlertChan(pl Payload, target string, endpoint *data.DataEndpoint) {
 	var msg string
 	var c *Commit
 	name := pl.Name()
 	branch := pl.Branch()
 
-	Endpoint.Privmsg(Channel, pl)
+	endpoint.Privmsg(target, pl)
 
 	for i := 0; i < pl.NumCommits(); i++ {
 		c = pl.Commits[i]
 		msg = fmt.Sprintf(MSG, name, branch, c)
-		Endpoint.Privmsg(Channel, msg)
+		endpoint.Privmsg(target, msg)
 	}
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
+func pushHandler(r *http.Request) fmt.Stringer {
 	payload := r.FormValue("payload")
 	var Pl Payload
 	err := json.Unmarshal([]byte(payload), &Pl)
 	if err != nil {
-		log.Println(err)
-		return
+		cinotify.DoLog("cinotify/gitbot: Failed to decode json payload: ", err)
+		return nil
 	}
-	alertChan(Pl)
+	return Pl
 }
 
-//Start the http listener
-func Listen(port, channel string, endpoint *data.DataEndpoint) (err error) {
-	Channel = channel
-	Endpoint = endpoint
-	http.HandleFunc("/", handler)
-	err = http.ListenAndServe(":"+port, nil)
-	return
+
+func init() {
+	cinotify.Register(Name, gitHandler{})
+}
+
+// gitHandler implements cinotify.Handler
+type gitHandler struct {
+}
+
+func (_ gitHandler) Handle(r *http.Request) fmt.Stringer {
+	defer r.Body.Close()
+	
+	switch r.Header.Get("X-GITHUB-EVENT") {
+		case "push":
+			return pushHandler(r)
+	}
+
+	return nil
+}
+
+func (_ gitHandler) Route(r *mux.Route) {
+	r.Path("/").Methods("POST").Headers(
+		"Content-Type", "application/x-www-form-urlencoded",
+		"X-GITHUB-EVENT", "",
+	)
 }
