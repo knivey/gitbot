@@ -16,9 +16,7 @@ const (
 	COMMIT_FORMAT  = "%s: %s: %s"
 	MSG            = "[%s/%s] %s"
 	NOMSG          = "No message"
-	// I have made this bold here to distinguish from actual
-	// data that contains Unknown
-	UNKNOWN = "\x02Unknown\x02"
+	UNKNOWN        = "Unknown"
 )
 
 func AlertChan(pl PushPayload, target string, endpoint *data.DataEndpoint) {
@@ -41,7 +39,7 @@ func pushHandler(r *http.Request) fmt.Stringer {
 	var Pl PushPayload
 	err := json.Unmarshal([]byte(payload), &Pl)
 	if err != nil {
-		cinotify.DoLog("cinotify/gitbot: Failed to decode json payload: ", err)
+		cinotify.DoLog("cinotify/gitbot/push: Failed to decode json payload: ", err)
 		return nil
 	}
 	return Pl
