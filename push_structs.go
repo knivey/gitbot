@@ -1,26 +1,28 @@
 //Structures for git
 package gitbot
 
-type Commit struct {
+import "time"
+
+type PushCommit struct {
 	Added     []string
 	Modified  []string
 	Removed   []string
-	Author    *Person
-	Committer *Person
+	Author    *PushPerson
+	Committer *PushPerson
 	Distinct  bool
 	Id        string
 	Message   string
-	Timestamp string //Might be able to use time here
+	Timestamp time.Time
 	Url       string
 }
 
-type Person struct {
+type PushPerson struct {
 	Email    string
 	Name     string
 	Username string
 }
 
-type Repository struct {
+type PushRepository struct {
 	Created_at    uint64
 	Description   string
 	Fork          bool
@@ -34,7 +36,7 @@ type Repository struct {
 	Master_branch string
 	Name          string
 	Open_issues   uint
-	Owner         *Person
+	Owner         *PushPerson
 	Private       bool
 	Pushed_at     uint64
 	Size          uint
@@ -43,7 +45,7 @@ type Repository struct {
 	Watchers      uint
 }
 
-type Payload struct {
+type PushPayload struct {
 	Before      string
 	After       string
 	Ref         string
@@ -51,8 +53,8 @@ type Payload struct {
 	Created     bool
 	Deleted     bool
 	Forced      bool
-	Commits     []*Commit
-	Head_commit *Commit
-	Pusher      *Person //may not have Username, beware
-	Repository  *Repository
+	Commits     []*PushCommit
+	Head_commit *PushCommit
+	Pusher      *PushPerson //may not have Username, beware
+	Repository  *PushRepository
 }
