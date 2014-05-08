@@ -6,6 +6,10 @@ import (
 	"strings"
 )
 
+const (
+	PUSH_MSG = "[%s] %s pushed %v commits to %s %s"
+)
+
 func (c PushCommit) User() string {
 	if c.Committer == nil || c.Committer.Username == "" {
 		return UNKNOWN
@@ -38,7 +42,7 @@ func (c PushCommit) Msg() string {
 }
 
 func (c PushCommit) String() string {
-	return fmt.Sprintf(COMMIT_FORMAT, c.ShortId(), c.User(), c.Msg())
+	return fmt.Sprintf("%s: %s: %s", c.ShortId(), c.User(), c.Msg())
 }
 
 func (pl PushPayload) Branch() string {
@@ -72,7 +76,7 @@ func (pl PushPayload) String() (out string) {
 	if err != nil {
 		comp = pl.Compare
 	}
-	out = fmt.Sprintf(PAYLOAD_FORMAT, pl.Name(), pl.PusherName(),
+	out = fmt.Sprintf(PUSH_MSG, pl.Name(), pl.PusherName(),
 		pl.NumCommits(), pl.Branch(), comp)
 	return
 }

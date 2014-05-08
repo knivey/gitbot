@@ -11,12 +11,10 @@ import (
 )
 
 const (
-	Name           = "gitbot"
-	PAYLOAD_FORMAT = "[%s] %s pushed %v commits to %s %s"
-	COMMIT_FORMAT  = "%s: %s: %s"
-	MSG            = "[%s/%s] %s"
-	NOMSG          = "No message"
-	UNKNOWN        = "Unknown"
+	Name       = "gitbot"
+	COMMIT_MSG = "[%s/%s] %s"
+	NOMSG      = "No message"
+	UNKNOWN    = "Unknown"
 )
 
 func AlertChan(pl PushPayload, target string, endpoint *data.DataEndpoint) {
@@ -29,7 +27,7 @@ func AlertChan(pl PushPayload, target string, endpoint *data.DataEndpoint) {
 
 	for i := 0; i < pl.NumCommits(); i++ {
 		c = pl.Commits[i]
-		msg = fmt.Sprintf(MSG, name, branch, c)
+		msg = fmt.Sprintf(COMMIT_MSG, name, branch, c)
 		endpoint.Privmsg(target, msg)
 	}
 }
@@ -57,8 +55,46 @@ func (_ gitHandler) Handle(r *http.Request) fmt.Stringer {
 	defer r.Body.Close()
 
 	switch r.Header.Get("X-GITHUB-EVENT") {
+	//Triggered when a repository branch is pushed to.
 	case "push":
 		return pushHandler(r)
+
+	// Triggered when a commit comment is created.
+	case "commit_comment":
+
+	//Represents a deleted branch or tag.
+	case "delete":
+
+	//Triggered when a user forks a repository.
+	case "fork":
+
+	//Triggered when a Wiki page is created or updated.
+	case "gollum":
+
+	//Triggered when an issue comment is created.
+	case "issue_comment":
+
+	//Triggered when an issue is created, closed or reopened.
+	case "issues":
+
+	//Triggered when a user is added as a collaborator to a repository.
+	case "member":
+
+	//Triggered when a pull request is created, closed, reopened or synchronized.
+	case "pull_request":
+
+	//Triggered when a comment is created on a portion of the unified diff of a pull request.
+	case "pull_request_review_comment":
+
+	//Triggered when a release is published.
+	case "release":
+
+	//Triggered when a user is added to a team or when a repository is added to a team.
+	case "team_add":
+
+	//The WatchEvent is related to starring a repository, not watching.
+	case "watch":
+
 	}
 
 	return nil
