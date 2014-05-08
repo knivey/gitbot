@@ -32,17 +32,6 @@ func AlertChan(pl PushPayload, target string, endpoint *data.DataEndpoint) {
 	}
 }
 
-func pushHandler(r *http.Request) fmt.Stringer {
-	payload := r.FormValue("payload")
-	var Pl PushPayload
-	err := json.Unmarshal([]byte(payload), &Pl)
-	if err != nil {
-		cinotify.DoLog("cinotify/gitbot/push: Failed to decode json payload: ", err)
-		return nil
-	}
-	return Pl
-}
-
 func init() {
 	cinotify.Register(Name, gitHandler{})
 }
@@ -53,11 +42,16 @@ type gitHandler struct {
 
 func (_ gitHandler) Handle(r *http.Request) fmt.Stringer {
 	defer r.Body.Close()
+	dec := json.NewDecoder(r.Body)
+	var err error
 
 	switch r.Header.Get("X-GITHUB-EVENT") {
 	//Triggered when a repository branch is pushed to.
 	case "push":
-		return pushHandler(r)
+		var pushPayload *PushPayload
+		if err = dec.Decode(pushPayload); err == nil {
+			return pushPayload
+		}
 
 	// Triggered when a commit comment is created.
 	case "commit_comment":
@@ -97,12 +91,15 @@ func (_ gitHandler) Handle(r *http.Request) fmt.Stringer {
 
 	}
 
+	if err != nil {
+		cinotify.DoLog("cinotify/gitbot/push: Failed to decode json payload: ", err)
+	}
 	return nil
 }
 
 func (_ gitHandler) Route(r *mux.Route) {
 	r.Path("/").Methods("POST").Headers(
-		"Content-Type", "application/x-www-form-urlencoded",
+		"Content-Type", "application/json",
 		"X-GITHUB-EVENT", "",
 	)
 }
