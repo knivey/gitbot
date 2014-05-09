@@ -19,3 +19,7 @@ type User struct {
 	Type              string `json:"type"`
 	SiteAdmin         bool   `json:"site_admin"`
 }
+
+func (s User) String() string {
+	return s.Login
+}

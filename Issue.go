@@ -1,6 +1,9 @@
 package gitbot
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type Issue struct {
 	User        *User        `json:"user"`
@@ -19,4 +22,8 @@ type Issue struct {
 	ClosedAt    string       `json:"closed_at"`
 	CreatedAt   time.Time    `json:"created_at"`
 	UpdatedAt   time.Time    `json:"updated_at"`
+}
+
+func (s Issue) String() string {
+	return fmt.Sprintf("#%v (%s)", s.Number, s.Title)
 }

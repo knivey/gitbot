@@ -1,6 +1,9 @@
 package gitbot
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type CommitComment struct {
 	HtmlUrl   string    `json:"html_url"`
@@ -14,4 +17,8 @@ type CommitComment struct {
 	User      *User     `json:"user"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+}
+
+func (s CommitComment) String() string {
+	return fmt.Sprintf("%s %s:%s by %s", s.CommitId, s.Path, s.Line, s.User)
 }

@@ -55,7 +55,10 @@ func (_ gitHandler) Handle(r *http.Request) fmt.Stringer {
 
 	// Triggered when a commit comment is created.
 	case "commit_comment":
-
+		var pl *PayloadCommitComment
+		if err = dec.Decode(pl); err == nil {
+			return pl
+		}
 	//Represents a deleted branch or tag.
 	case "delete":
 
@@ -88,7 +91,10 @@ func (_ gitHandler) Handle(r *http.Request) fmt.Stringer {
 
 	//The WatchEvent is related to starring a repository, not watching.
 	case "watch":
-
+		var pl *PayloadWatch
+		if err = dec.Decode(pl); err == nil {
+			return pl
+		}
 	}
 
 	if err != nil {
