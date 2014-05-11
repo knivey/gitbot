@@ -12,4 +12,5 @@ func (s PayloadWatch) String() string {
 	if s.Action == "started" {
 		return fmt.Sprintf("[%s] was starred by %s", s.Repo, s.Sender)
 	}
+	return fmt.Sprintf("[%s] %s has performed an unknown watch action", s.Repo, s.Sender)
 }
