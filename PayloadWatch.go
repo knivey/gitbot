@@ -9,5 +9,7 @@ type PayloadWatch struct {
 }
 
 func (s PayloadWatch) String() string {
-	return fmt.Sprintf("[%s] was starred by %s", s.Repo, s.Sender)
+	if s.Action == "started" {
+		return fmt.Sprintf("[%s] was starred by %s", s.Repo, s.Sender)
+	}
 }
