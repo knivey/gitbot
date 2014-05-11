@@ -135,7 +135,7 @@ func (_ gitHandler) Handle(r *http.Request) fmt.Stringer {
 	}
 
 	if err != nil {
-		cinotify.DoLog("cinotify/gitbot/%s: Failed to decode json payload: %v",
+		cinotify.DoLogf("cinotify/gitbot/%s: Failed to decode json payload: %v",
 			r.Header.Get("X-GITHUB-EVENT"), err)
 	}
 	return nil
