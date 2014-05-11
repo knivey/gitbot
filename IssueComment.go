@@ -1,6 +1,9 @@
 package gitbot
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type IssueComment struct {
 	User      *User     `json:"user"`
@@ -10,4 +13,8 @@ type IssueComment struct {
 	Body      string    `json:"body"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+}
+
+func (s IssueComment) String() string {
+	return fmt.Sprintf("%s", s.HtmlUrl)
 }

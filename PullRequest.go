@@ -1,6 +1,9 @@
 package gitbot
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type PullRequest struct {
 	Head              *Head     `json:"head"`
@@ -34,4 +37,8 @@ type PullRequest struct {
 	Additions         int       `json:"additions"`
 	Deletions         int       `json:"deletions"`
 	ChangedFiles      int       `json:"changed_files"`
+}
+
+func (s PullRequest) String() string {
+	return fmt.Sprintf("#%v %s %s", s.Number, s.Title, s.HtmlUrl)
 }

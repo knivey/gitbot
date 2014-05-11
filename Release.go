@@ -1,6 +1,9 @@
 package gitbot
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type Release struct {
 	Url             string    `json:"url"`
@@ -20,4 +23,8 @@ type Release struct {
 	PublishedAt     time.Time `json:"published_at"`
 	Author          *User     `json:"author"`
 	Assets          []*Asset  `json:"assets"`
+}
+
+func (s Release) String() string {
+	return fmt.Sprintf("%s %s", s.Name, s.HtmlUrl)
 }

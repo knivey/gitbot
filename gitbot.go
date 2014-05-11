@@ -59,35 +59,72 @@ func (_ gitHandler) Handle(r *http.Request) fmt.Stringer {
 		if err = dec.Decode(pl); err == nil {
 			return pl
 		}
+
 	//Represents a deleted branch or tag.
 	case "delete":
+		var pl *PayloadDelete
+		if err = dec.Decode(pl); err == nil {
+			return pl
+		}
 
 	//Triggered when a user forks a repository.
 	case "fork":
+		var pl *PayloadFork
+		if err = dec.Decode(pl); err == nil {
+			return pl
+		}
 
 	//Triggered when a Wiki page is created or updated.
 	case "gollum":
+		var pl *PayloadGollum
+		if err = dec.Decode(pl); err == nil {
+			return pl
+		}
 
 	//Triggered when an issue comment is created.
 	case "issue_comment":
+		var pl *PayloadIssueComment
+		if err = dec.Decode(pl); err == nil {
+			return pl
+		}
 
 	//Triggered when an issue is created, closed or reopened.
 	case "issues":
+		var pl *PayloadIssues
+		if err = dec.Decode(pl); err == nil {
+			return pl
+		}
 
 	//Triggered when a user is added as a collaborator to a repository.
 	case "member":
+		var pl *PayloadMember
+		if err = dec.Decode(pl); err == nil {
+			return pl
+		}
 
 	//Triggered when a pull request is created, closed, reopened or synchronized.
 	case "pull_request":
+		var pl *PayloadPullRequest
+		if err = dec.Decode(pl); err == nil {
+			return pl
+		}
 
 	//Triggered when a comment is created on a portion of the unified diff of a pull request.
 	case "pull_request_review_comment":
 
 	//Triggered when a release is published.
 	case "release":
+		var pl *PayloadRelease
+		if err = dec.Decode(pl); err == nil {
+			return pl
+		}
 
 	//Triggered when a user is added to a team or when a repository is added to a team.
 	case "team_add":
+		var pl *PayloadTeamAdd
+		if err = dec.Decode(pl); err == nil {
+			return pl
+		}
 
 	//The WatchEvent is related to starring a repository, not watching.
 	case "watch":

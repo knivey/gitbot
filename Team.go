@@ -9,3 +9,7 @@ type Team struct {
 	ReposCount   int           `json:"repos_count"`
 	Organization *Organization `json:"organization"`
 }
+
+func (s Team) String() string {
+	return s.Name
+}
