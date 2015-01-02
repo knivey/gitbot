@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/aarondl/cinotify"
-	"github.com/aarondl/ultimateq/data"
+	"github.com/aarondl/ultimateq/irc"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -17,18 +17,18 @@ const (
 	UNKNOWN    = "Unknown"
 )
 
-func AlertChan(pl PushPayload, target string, endpoint *data.DataEndpoint) {
+func AlertChan(pl PushPayload, target string, w irc.Writer) {
 	var msg string
 	var c *PushCommit
 	name := pl.Name()
 	branch := pl.Branch()
 
-	endpoint.Privmsg(target, pl)
+	w.Privmsg(target, pl)
 
 	for i := 0; i < pl.NumCommits(); i++ {
 		c = pl.Commits[i]
 		msg = fmt.Sprintf(COMMIT_MSG, name, branch, c)
-		endpoint.Privmsg(target, msg)
+		w.Privmsg(target, msg)
 	}
 }
 
