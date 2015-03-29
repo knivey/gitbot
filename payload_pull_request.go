@@ -11,5 +11,5 @@ type PayloadPullRequest struct {
 }
 
 func (s PayloadPullRequest) String() string {
-	return fmt.Sprintf("[%s] %s has %s pull request %s", s.Repo, s.Sender, s.Action, s.PullRequest)
+	return fmt.Sprintf("[%s] %s %s pull request %s", s.Repo, s.Sender, s.Action, s.PullRequest)
 }
