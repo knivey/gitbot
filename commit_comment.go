@@ -20,5 +20,5 @@ type CommitComment struct {
 }
 
 func (s CommitComment) String() string {
-	return fmt.Sprintf("%s %s:%s by %s", s.CommitId, s.Path, s.Line, s.User)
+	return fmt.Sprintf("%s %s:%d by %s", s.CommitId, s.Path, s.Line, s.User)
 }
