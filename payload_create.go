@@ -13,5 +13,5 @@ type PayloadCreate struct {
 }
 
 func (p PayloadCreate) String() string {
-	return fmt.Sprintf("[%s] %s created %s %s", p.Repo, p.Sender, p.RefType, p.Ref)
+	return fmt.Sprintf("[%s] %s has created %s %s", p.Repo, p.Sender, p.RefType, p.Ref)
 }

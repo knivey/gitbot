@@ -20,5 +20,9 @@ type CommitComment struct {
 }
 
 func (s CommitComment) String() string {
-	return fmt.Sprintf("%s %s:%d by %s", s.CommitId, s.Path, s.Line, s.User)
+        if(s.Path != "") {
+	        return fmt.Sprintf("on %s:%d by %s %s", s.Path, s.Line, s.User, s.HtmlUrl)
+        }
+        return fmt.Sprintf("by %s %s", s.User, s.HtmlUrl)
 }
+

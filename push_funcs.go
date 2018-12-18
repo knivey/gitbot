@@ -51,10 +51,10 @@ func (pl PushPayload) Branch() string {
 }
 
 func (pl PushPayload) Name() string {
-	if pl.Repository == nil || pl.Repository.Name == "" {
+	if pl.Repository == nil {
 		return UNKNOWN
 	}
-	return pl.Repository.Name
+	return pl.Repository.String()
 }
 
 func (pl PushPayload) NumCommits() int {

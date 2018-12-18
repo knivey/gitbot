@@ -1,12 +1,3 @@
-package gitbot
-
-import (
-	"encoding/json"
-	"testing"
-)
-
-func TestPayloadCreate(t *testing.T) {
-	payload := `
 {
   "ref": "reaper",
   "ref_type": "branch",
@@ -119,14 +110,4 @@ func TestPayloadCreate(t *testing.T) {
     "type": "User",
     "site_admin": false
   }
-}`
-
-	var p PayloadCreate
-	if err := json.Unmarshal([]byte(payload), &p); err != nil {
-		t.Error(err)
-	}
-
-	if str := p.String(); str != "[aarondl/ultimateq] aarondl created branch reaper" {
-		t.Error("String is wrong:", str)
-	}
 }

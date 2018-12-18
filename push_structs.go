@@ -22,29 +22,6 @@ type PushPerson struct {
 	Username string
 }
 
-type PushRepository struct {
-	Created_at    uint64
-	Description   string
-	Fork          bool
-	Forks         uint
-	Has_downloads bool
-	Has_issues    bool
-	Has_wiki      bool
-	Homepage      string
-	Id            uint
-	Language      string
-	Master_branch string
-	Name          string
-	Open_issues   uint
-	Owner         *PushPerson
-	Private       bool
-	Pushed_at     uint64
-	Size          uint
-	Stargazers    uint
-	Url           string
-	Watchers      uint
-}
-
 type PushPayload struct {
 	Before      string
 	After       string
@@ -56,5 +33,5 @@ type PushPayload struct {
 	Commits     []*PushCommit
 	Head_commit *PushCommit
 	Pusher      *PushPerson //may not have Username, beware
-	Repository  *PushRepository
+	Repository  *Repository
 }
