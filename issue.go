@@ -2,7 +2,6 @@ package gitbot
 
 import (
 	"fmt"
-	"time"
 )
 
 type Issue struct {
@@ -20,8 +19,8 @@ type Issue struct {
 	Body        string       `json:"body"`
 	Comments    int          `json:"comments"`
 	ClosedAt    string       `json:"closed_at"`
-	CreatedAt   time.Time    `json:"created_at"`
-	UpdatedAt   time.Time    `json:"updated_at"`
+	//CreatedAt   NullTime     `json:"created_at"`
+	//UpdatedAt   NullTime     `json:"updated_at"`
 }
 
 func (s Issue) String() string {

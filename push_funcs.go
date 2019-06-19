@@ -2,8 +2,9 @@ package gitbot
 
 import (
 	"fmt"
-	"github.com/aarondl/gitio"
 	"strings"
+
+	"github.com/aarondl/gitio"
 )
 
 const (
@@ -36,9 +37,8 @@ func (c PushCommit) Msg() string {
 
 	if n > 0 {
 		return c.Message[:n-1]
-	} else {
-		return c.Message
 	}
+	return c.Message
 }
 
 func (c PushCommit) String() string {

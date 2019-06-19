@@ -1,8 +1,6 @@
 //Structures for git
 package gitbot
 
-import "time"
-
 type PushCommit struct {
 	Added     []string
 	Modified  []string
@@ -12,8 +10,8 @@ type PushCommit struct {
 	Distinct  bool
 	Id        string
 	Message   string
-	Timestamp time.Time
-	Url       string
+	//Timestamp *NullTime
+	Url string
 }
 
 type PushPerson struct {
