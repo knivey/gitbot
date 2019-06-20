@@ -5,11 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/aarondl/cinotify"
+	"github.com/aarondl/gitio"
 	"github.com/gorilla/mux"
-	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -19,25 +18,20 @@ const (
 	UNKNOWN    = "Unknown"
 )
 
-func setupLogLevel() {
-	lvl, ok := os.LookupEnv("LOG_LEVEL")
-	// LOG_LEVEL not set, let's default to debug
-	if !ok {
-		lvl = "debug"
-	}
-	// parse string, this is built-in feature of logrus
-	ll, err := logrus.ParseLevel(lvl)
-	if err != nil {
-		ll = logrus.DebugLevel
-	}
-	// set global log level
-	logrus.SetLevel(ll)
-}
-
 func init() {
-	setupLogLevel()
 	cinotify.Register(Name, gitHandler{})
 }
+
+type Shortener interface {
+	Shorten(string) (string, error)
+}
+type ShortenFunc func(string) (string, error)
+
+func (s ShortenFunc) Shorten(url string) (string, error) {
+	return s(url)
+}
+
+var ShortURL Shortener = ShortenFunc(gitio.Shorten)
 
 // gitHandler implements cinotify.Handler
 type gitHandler struct {
@@ -83,8 +77,6 @@ func (_ gitHandler) Handle(r *http.Request) fmt.Stringer {
 	}
 
 	if err := dec.Decode(payload); err != nil {
-		logrus.Debugf("cinotify/gitbot/%s: Failed to decode json payload: %v",
-			r.Header.Get("X-GITHUB-EVENT"), err)
 		cinotify.DoLogf("cinotify/gitbot/%s: Failed to decode json payload: %v",
 			r.Header.Get("X-GITHUB-EVENT"), err)
 

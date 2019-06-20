@@ -2,10 +2,29 @@ package gitbot
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"testing"
+
+	"github.com/aarondl/cinotify"
 )
+
+type Mockshortener struct{}
+
+func (Mockshortener) Shorten(url string) (string, error) {
+	return url, nil
+}
+
+// this function would be in the gitio lib
+func ShortenMock(url string) (string, error) {
+	return url[len(url)/2:], nil
+}
+
+func init() {
+	ShortURL = ShortenFunc(ShortenMock)
+	cinotify.Logger = log.New(os.Stdout, "Log: ", log.Llongfile)
+}
 
 func Setup(plName string, t *testing.T) fmt.Stringer {
 	return SetupB(plName, plName, t)
@@ -69,6 +88,13 @@ func TestDelete(t *testing.T) {
 func TestIssues(t *testing.T) {
 	ret := Setup("issues", t)
 	if str := ret.String(); str != "[baxterthehacker/public-repo] baxterthehacker opened issue #2 (Spelling error in the README file)" {
+		t.Error("String was wrong:", str)
+	}
+}
+
+func TestPush(t *testing.T) {
+	ret := Setup("push", t)
+	if str := ret.String(); str != "[knivey/weather] knivey pushed 1 commits to master compare/b1d23c793710...f341b71b7267" {
 		t.Error("String was wrong:", str)
 	}
 }

@@ -3,8 +3,6 @@ package gitbot
 import (
 	"fmt"
 	"strings"
-
-	"github.com/aarondl/gitio"
 )
 
 const (
@@ -72,7 +70,7 @@ func (pl PushPayload) PusherName() string {
 }
 
 func (pl PushPayload) String() (out string) {
-	comp, err := gitio.Shorten(pl.Compare)
+	comp, err := ShortURL.Shorten(pl.Compare)
 	if err != nil {
 		comp = pl.Compare
 	}
