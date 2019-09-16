@@ -2,6 +2,8 @@ package gitbot
 
 import "fmt"
 
+// PayloadWatch when a watcher is added
+// Currently Github is confusing and sends this as well when a star occurs
 type PayloadWatch struct {
 	Action string      `json:"action"`     // The action that was performed. Currently, can only be started.
 	Repo   *Repository `json:"repository"` // Repo

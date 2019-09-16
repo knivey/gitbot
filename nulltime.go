@@ -5,11 +5,13 @@ import (
 	"time"
 )
 
+// NullTime allows us to parse time OR a null from JSON
 type NullTime struct {
 	Valid bool
 	Time  time.Time
 }
 
+// MarshalJSON turns null time into json
 func (n NullTime) MarshalJSON() ([]byte, error) {
 	if !n.Valid {
 		return []byte(`null`), nil
@@ -18,6 +20,7 @@ func (n NullTime) MarshalJSON() ([]byte, error) {
 	return []byte(n.Time.Format(time.RFC3339)), nil
 }
 
+// UnmarshalJSON parses time from json
 func (n *NullTime) UnmarshalJSON(data []byte) error {
 	str := strings.Trim(string(data), `"`)
 
@@ -35,6 +38,7 @@ func (n *NullTime) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// String for fmt.Stringer
 func (n NullTime) String() string {
 	if !n.Valid {
 		return ""

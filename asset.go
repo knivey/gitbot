@@ -1,8 +1,9 @@
 package gitbot
 
+// Asset usually refers to a downloadable release
 type Asset struct {
-	Url           string `json:"url"`
-	Id            int    `json:"id"`
+	URL           string `json:"url"`
+	ID            int    `json:"id"`
 	Name          string `json:"name"`
 	Label         string `json:"label"`
 	State         string `json:"state"`

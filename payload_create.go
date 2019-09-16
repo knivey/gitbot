@@ -2,6 +2,7 @@ package gitbot
 
 import "fmt"
 
+// PayloadCreate for creating repositories/branches
 type PayloadCreate struct {
 	Ref          string      `json:"ref"`
 	RefType      string      `json:"ref_type"`

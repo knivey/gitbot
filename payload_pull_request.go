@@ -2,6 +2,7 @@ package gitbot
 
 import "fmt"
 
+// PayloadPullRequest when a PR gets created
 type PayloadPullRequest struct {
 	Action      string       `json:"action"`       // The action that was performed. Can be one of “opened”, “closed”, “synchronize”, or “reopened”.
 	Number      int          `json:"number"`       // The pull request number.

@@ -4,14 +4,15 @@ import (
 	"fmt"
 )
 
+// Release object
 type Release struct {
-	Url             string `json:"url"`
-	HtmlUrl         string `json:"html_url"`
-	AssetsUrl       string `json:"assets_url"`
-	UploadUrl       string `json:"upload_url"`
-	TarballUrl      string `json:"tarball_url"`
-	ZipballUrl      string `json:"zipball_url"` // lol zipball
-	Id              int    `json:"id"`
+	URL             string `json:"url"`
+	HTMLURL         string `json:"html_url"`
+	AssetsURL       string `json:"assets_url"`
+	UploadURL       string `json:"upload_url"`
+	TarballURL      string `json:"tarball_url"`
+	ZipballURL      string `json:"zipball_url"` // lol zipball
+	ID              int    `json:"id"`
 	TagName         string `json:"tag_name"`
 	TargetCommitish string `json:"target_commitish"`
 	Name            string `json:"name"`
@@ -25,5 +26,5 @@ type Release struct {
 }
 
 func (s Release) String() string {
-	return fmt.Sprintf("%s %s", s.Name, s.HtmlUrl)
+	return fmt.Sprintf("%s %s", s.Name, s.HTMLURL)
 }

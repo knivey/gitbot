@@ -1,9 +1,10 @@
 package gitbot
 
+// Team object from github api
 type Team struct {
-	Url          string        `json:"url"`
+	URL          string        `json:"url"`
 	Name         string        `json:"name"`
-	Id           string        `json:"id"`
+	ID           string        `json:"id"`
 	Permission   string        `json:"permission"`
 	MembersCount int           `json:"members_count"`
 	ReposCount   int           `json:"repos_count"`

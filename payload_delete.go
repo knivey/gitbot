@@ -2,6 +2,7 @@ package gitbot
 
 import "fmt"
 
+// PayloadDelete for deleting refs/tags/branches
 type PayloadDelete struct {
 	RefType string      `json:"ref_type"`   //The object that was deleted. Can be “branch” or “tag”.
 	Ref     string      `json:"ref"`        //The full git ref.

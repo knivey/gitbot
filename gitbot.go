@@ -1,45 +1,53 @@
-// gitbot project gitbot.go
+// Package gitbot parses git webhooks and sends them to cinotify
 package gitbot
 
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/aarondl/cinotify"
 	"github.com/aarondl/gitio"
-	"github.com/gorilla/mux"
 )
 
+// Constants
 const (
-	Name       = "gitbot"
-	COMMIT_MSG = "[%s/%s] %s"
-	NOMSG      = "No message"
-	UNKNOWN    = "Unknown"
+	Name      = "gitbot"
+	CommitMsg = "[%s/%s] %s"
+	NoMsg     = "No message"
+	Unknown   = "Unknown"
 )
 
 func init() {
 	cinotify.Register(Name, gitHandler{})
 }
 
-type Shortener interface {
+type shortener interface {
 	Shorten(string) (string, error)
 }
-type ShortenFunc func(string) (string, error)
+type shortenFunc func(string) (string, error)
 
-func (s ShortenFunc) Shorten(url string) (string, error) {
+func (s shortenFunc) Shorten(url string) (string, error) {
 	return s(url)
 }
 
-var ShortURL Shortener = ShortenFunc(gitio.Shorten)
+var shortURL shortener = shortenFunc(gitio.Shorten)
 
 // gitHandler implements cinotify.Handler
 type gitHandler struct {
 }
 
-func (_ gitHandler) Handle(r *http.Request) fmt.Stringer {
-	defer r.Body.Close()
-	dec := json.NewDecoder(r.Body)
+// Handle the event by returning a stringer, if nil the event was not parseable
+// or otherwise understood
+func (gitHandler) Handle(r *http.Request) fmt.Stringer {
+	path := r.URL.Path == "/"
+	method := r.Method == http.MethodPost
+	contentType := r.Header.Get("Content-Type") == "application/json"
+	xGithubEvent := len(r.Header.Get("X-GITHUB-EVENT")) > 0
+	if !path || !method || !contentType || !xGithubEvent {
+		return nil
+	}
 
 	var payload interface{}
 
@@ -65,18 +73,27 @@ func (_ gitHandler) Handle(r *http.Request) fmt.Stringer {
 	case "pull_request": //Triggered when a pull request is created, closed, reopened or synchronized.
 		payload = &PayloadPullRequest{}
 	case "pull_request_review_comment": //Triggered when a comment is created on a portion of the unified diff of a pull request.
-
+		return nil
 	case "release": //Triggered when a release is published.
 		payload = &PayloadRelease{}
 	case "team_add": //Triggered when a user is added to a team or when a repository is added to a team.
 		payload = &PayloadTeamAdd{}
-	case "watch": //The WatchEvent is related to starring a repository, not watching.
-		payload = &PayloadWatch{}
+	case "star":
+		payload = &PayloadStar{}
+	case "watch":
+		// Watch doesn't make sense anymore, ignore it intentionally
+		return nil
 	default:
+		cinotify.DoLogf("cinotify/gitbot/%s: unknown event", r.Header.Get("X-GITHUB-EVENT"))
 		return nil
 	}
 
-	if err := dec.Decode(payload); err != nil {
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return nil
+	}
+
+	if err := json.Unmarshal(b, payload); err != nil {
 		cinotify.DoLogf("cinotify/gitbot/%s: Failed to decode json payload: %v",
 			r.Header.Get("X-GITHUB-EVENT"), err)
 
@@ -89,11 +106,4 @@ func (_ gitHandler) Handle(r *http.Request) fmt.Stringer {
 		}
 	}
 	return nil
-}
-
-func (_ gitHandler) Route(r *mux.Route) {
-	r.Path("/").Methods("POST").Headers(
-		"Content-Type", "application/json",
-		"X-GITHUB-EVENT", "",
-	)
 }

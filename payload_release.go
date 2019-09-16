@@ -2,6 +2,7 @@ package gitbot
 
 import "fmt"
 
+// PayloadRelease when a release is published
 type PayloadRelease struct {
 	Action  string      `json:"action"`     // The action that was performed. Currently, can only be “published”.
 	Release *Release    `json:"release"`    // The release itself.

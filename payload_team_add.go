@@ -2,6 +2,7 @@ package gitbot
 
 import "fmt"
 
+// PayloadTeamAdd when a team is added to
 type PayloadTeamAdd struct {
 	Team   *Team       `json:"team"`       // The team that was modified.
 	User   *User       `json:"user"`       // The user that was added to this team.

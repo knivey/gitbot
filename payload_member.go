@@ -2,6 +2,7 @@ package gitbot
 
 import "fmt"
 
+// PayloadMember when membership of an repo changes
 type PayloadMember struct {
 	Member *User       `json:"member"`     // The user that was added.
 	Action string      `json:"action"`     // The action that was performed. Currently, can only be “added”.
