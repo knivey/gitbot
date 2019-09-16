@@ -2,22 +2,23 @@ package gitbot
 
 import "fmt"
 
+// PullRequest object from github API
 type PullRequest struct {
 	Head              *Head  `json:"head"`
 	Base              *Head  `json:"base"`
 	Links             *Links `json:"_links"`
 	User              *User  `json:"user"`
 	MergedBy          *User  `json:"merged_by"`
-	Url               string `json:"url"`
-	HtmlUrl           string `json:"html_url"`
-	DiffUrl           string `json:"diff_url"`
-	PatchUrl          string `json:"patch_url"`
-	IssueUrl          string `json:"issue_url"`
-	CommitsUrl        string `json:"commits_url"`
-	ReviewCommentsUrl string `json:"review_comments_url"`
-	ReviewCommentUrl  string `json:"review_comment_url"`
-	CommentsUrl       string `json:"comments_url"`
-	StatusesUrl       string `json:"statuses_url"`
+	URL               string `json:"url"`
+	HTMLURL           string `json:"html_url"`
+	DiffURL           string `json:"diff_url"`
+	PatchURL          string `json:"patch_url"`
+	IssueURL          string `json:"issue_url"`
+	CommitsURL        string `json:"commits_url"`
+	ReviewCommentsURL string `json:"review_comments_url"`
+	ReviewCommentURL  string `json:"review_comment_url"`
+	CommentsURL       string `json:"comments_url"`
+	StatusesURL       string `json:"statuses_url"`
 	Number            int    `json:"number"`
 	State             string `json:"state"`
 	Title             string `json:"title"`
@@ -37,5 +38,5 @@ type PullRequest struct {
 }
 
 func (s PullRequest) String() string {
-	return fmt.Sprintf("#%v %s (%s)", s.Number, s.Title, s.HtmlUrl)
+	return fmt.Sprintf("#%v %s (%s)", s.Number, s.Title, s.HTMLURL)
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// Issue object from github api
 type Issue struct {
 	User        *User        `json:"user"`
 	Assignee    *User        `json:"assignee"`
@@ -11,8 +12,8 @@ type Issue struct {
 	PullRequest *PullRequest `json:"pull_request"`
 	ClosedBy    *User        `json:"closed_by"`
 	Labels      []*Label     `json:"labels"`
-	Url         string       `json:"url"`
-	HtmlUrl     string       `json:"html_url"`
+	URL         string       `json:"url"`
+	HTMLURL     string       `json:"html_url"`
 	Number      int          `json:"number"`
 	State       string       `json:"state"`
 	Title       string       `json:"title"`

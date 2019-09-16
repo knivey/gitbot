@@ -2,6 +2,7 @@ package gitbot
 
 import "fmt"
 
+// PayloadCommitComment is a commit comment
 type PayloadCommitComment struct {
 	Comment *CommitComment `json:"comment"`    // The comment itself.
 	Repo    *Repository    `json:"repository"` // Repo

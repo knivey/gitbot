@@ -1,8 +1,9 @@
 package gitbot
 
+// Links to various resources
 type Links struct {
 	Self           *Link `json:"self"`
-	Html           *Link `json:"html"`
+	HTML           *Link `json:"html"`
 	Issue          *Link `json:"issue"`
 	Comments       *Link `json:"comments"`
 	ReviewComments *Link `json:"review_comments"`

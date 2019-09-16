@@ -1,20 +1,21 @@
 package gitbot
 
+// Repository is the general repository object in the github API
 type Repository struct {
 	Owner           *User  `json:"owner"`
-	Id              int    `json:"id"`
+	ID              int    `json:"id"`
 	Name            string `json:"name"`
 	FullName        string `json:"full_name"`
 	Description     string `json:"description"`
 	Private         bool   `json:"private"`
 	Fork            bool   `json:"fork"`
-	Url             string `json:"url"`
-	HtmlUrl         string `json:"html_url"`
-	CloneUrl        string `json:"clone_url"`
-	GitUrl          string `json:"git_url"`
-	SshUrl          string `json:"ssh_url"`
-	SvnUrl          string `json:"svn_url"`
-	MirrorUrl       string `json:"mirror_url"`
+	URL             string `json:"url"`
+	HTMLURL         string `json:"html_url"`
+	CloneURL        string `json:"clone_url"`
+	GitURL          string `json:"git_url"`
+	SSHURL          string `json:"ssh_url"`
+	SVNURL          string `json:"svn_url"`
+	MirrorURL       string `json:"mirror_url"`
 	Homepage        string `json:"homepage"`
 	Language        string `json:"language"`
 	ForksCount      int    `json:"forks_count"`

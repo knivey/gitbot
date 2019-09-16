@@ -1,8 +1,9 @@
 package gitbot
 
+// Milestone for a repository
 type Milestone struct {
 	Creator      *User  `json:"creator"`
-	Url          string `json:"url"`
+	URL          string `json:"url"`
 	Number       int    `json:"number"`
 	State        string `json:"state"`
 	Title        string `json:"title"`

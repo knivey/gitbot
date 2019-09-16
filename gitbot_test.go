@@ -17,12 +17,12 @@ func (Mockshortener) Shorten(url string) (string, error) {
 }
 
 // this function would be in the gitio lib
-func ShortenMock(url string) (string, error) {
+func shortenMock(url string) (string, error) {
 	return url[len(url)/2:], nil
 }
 
 func init() {
-	ShortURL = ShortenFunc(ShortenMock)
+	shortURL = shortenFunc(shortenMock)
 	cinotify.Logger = log.New(os.Stdout, "Log: ", log.Llongfile)
 }
 

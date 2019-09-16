@@ -2,6 +2,7 @@ package gitbot
 
 import "fmt"
 
+// PayloadFork when someone forks a repo
 type PayloadFork struct {
 	Forkee *Repository `json:"forkee"`     // The created repository.
 	Repo   *Repository `json:"repository"` // Repo

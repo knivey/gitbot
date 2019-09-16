@@ -2,6 +2,7 @@ package gitbot
 
 import "fmt"
 
+// PayloadGollum for generating github pages
 type PayloadGollum struct {
 	Pages  []*Page     `json:"pages"`      // The pages that were updated.
 	Repo   *Repository `json:"repository"` // Repo
